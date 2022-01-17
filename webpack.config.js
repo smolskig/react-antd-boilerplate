@@ -28,20 +28,49 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.less$/i,
+        test: /\.(png|jpe?g|gif)$/i,
         use: [
-          // compiles Less to CSS
-          "style-loader",
-          "css-loader",
-          "less-loader",
+          {
+            loader: "file-loader",
+          },
         ],
       },
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: "svg-url-loader",
+            options: {
+              limit: 10000,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "less-loader",
+          },
+          {
+            loader: "style-resources-loader",
+            options: {
+              patterns: [
+                path.resolve(__dirname, "src/theme/theme.config.less"),
+                path.resolve(__dirname, "src/theme/global.less"),
+              ],
+            },
+          },
+        ],
       },
     ],
   },
